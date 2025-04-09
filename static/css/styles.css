@@ -15,6 +15,13 @@
 	 background-color: #ecf0f9;
 	 background-attachment: fixed;
 }
+a {
+	 text-decoration: none;
+	 color: inherit;
+}
+a:hover {
+	 color: #ecf0f9;
+}
 .large {
      font-size: 3rem;
 }
@@ -153,6 +160,9 @@
 	 position: relative;
 	 transform-style: preserve-3d;
 	 transition: 300ms ease;
+}
+.button:hover {
+	 background: linear-gradient(135deg, #e61a46, #e61a1a);
 }
  .button:before {
 	 transition: 300ms ease;
