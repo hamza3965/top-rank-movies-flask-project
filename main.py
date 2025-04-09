@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -7,13 +7,15 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, FloatField
 from wtforms.validators import DataRequired
 from dotenv import load_dotenv
+from sqlalchemy.exc import IntegrityError
+import logging
 import os
 import requests
 
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1/"
 MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
 MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/w300/"
-MOVIE_DB_API_KEY = os.getenv("API_KEY") # Use your api key here
+MOVIE_DB_API_KEY = os.getenv("API_KEY")
 
 load_dotenv()
 
@@ -102,14 +104,20 @@ def find_movie(movie_id):
         movie_api_url = f"{MOVIE_DB_INFO_URL}/{movie_id}"
         response = requests.get(movie_api_url, params={"api_key": MOVIE_DB_API_KEY, "language": "en-US"})
         data = response.json()
-        new_movie = Movie(
-            title=data["original_title"],
-            year=data["release_date"].split("-")[0],
-            img_url=f"{MOVIE_DB_IMAGE_URL}{data['poster_path']}",
-            description=data["overview"]
-        )
-        db.session.add(new_movie)
-        db.session.commit()
+        try:
+            new_movie = Movie(
+                title=data["original_title"],
+                year=data["release_date"].split("-")[0],
+                img_url=f"{MOVIE_DB_IMAGE_URL}{data['poster_path']}",
+                description=data["overview"]
+            )
+            db.session.add(new_movie)
+            db.session.commit()
+        except IntegrityError as e:
+            logging.error(f"IntegrityError occurred: {e}")
+            db.session.rollback()
+            flash("A movie with this title already exists. Please choose a different title.", "error")
+            return redirect(url_for("home"))
         return redirect(url_for("rate_movie", movie_id=new_movie.id))
 
 if __name__ == '__main__':

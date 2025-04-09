@@ -3,40 +3,57 @@
 {% block title %}My Top 10 Movies{% endblock %}
 
 {% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <span class="message-text">{{ message }}</span>
+                    <button class="close-btn" onclick="closeMessage(this)">×</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 <div class="container">
   <h1 class="heading">My Top 10 Movies</h1>
   <p class="description">These are my all-time favourite movies.</p>
   {% if movies %}
     {% for movie in movies %}
-      <div class="card" >
-        <div class="front" style="background-image: url('{{ movie.img_url }}');">
-            <p class="large">{{ movie.ranking }}</p>
-        </div>
-        <div class="back">
-          <div>
-        <div class="title">{{ movie.title }} <span class="release_date">({{ movie.year }})</span></div>
-            <div class="rating">
-                <label>{{ movie.rating }}</label>
-                <i class="fas fa-star star"></i>
-            </div>
-            <p class="review">"{{ movie.review }}"</p>
-            <p class="overview">{{ movie.description }}</p>
-
-            <a href="{{ url_for('rate_movie', movie_id=movie.id) }}" class="button">Update</a>
-            <a href="{{ url_for('delete_movie', movie_id=movie.id) }}" class="button delete-button">Delete</a>
-
+    <div class="card" >
+      <div class="front" style="background-image: url('{{ movie.img_url }}');">
+          <p class="large">{{ movie.ranking }}</p>
+      </div>
+      <div class="back">
+        <div>
+      <div class="title">{{ movie.title }} <span class="release_date">({{ movie.year }})</span></div>
+          <div class="rating">
+              <label>{{ movie.rating }}</label>
+              <i class="fas fa-star star"></i>
           </div>
+          <p class="review">"{{ movie.review }}"</p>
+          <p class="overview">{{ movie.description }}</p>
+
+          <a href="{{ url_for('rate_movie', movie_id=movie.id) }}" class="button">Update</a>
+          <a href="{{ url_for('delete_movie', movie_id=movie.id) }}" class="button delete-button">Delete</a>
+
         </div>
       </div>
+    </div>
     {% endfor %}
-  {% else %}
-    <p class="text-center">No movies yet.</p>
-  {% endif %}
+    {% else %}
+      <p class="text-center">No movies yet.</p>
+    {% endif %}
 </div>
 {% if movies|length < 10 %}
 <div class="container text-center add">
   <a href="{{ url_for('add_movie') }}" class="button">Add Movie</a>
 </div>
 {% endif %}
-
+<script>
+    function closeMessage(button) {
+        var flashMessage = button.closest('.flash-message');
+        flashMessage.style.display = 'none';  // Hide the flash message
+    }
+</script>
 {% endblock %}
