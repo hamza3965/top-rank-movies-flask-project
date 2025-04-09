@@ -13,7 +13,7 @@ import requests
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1/"
 MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
 MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/w300/"
-MOVIE_DB_API_KEY = os.getenv("API_KEY")
+MOVIE_DB_API_KEY = os.getenv("API_KEY") # Use your api key here
 
 load_dotenv()
 
