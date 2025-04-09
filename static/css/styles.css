@@ -22,6 +22,27 @@ a {
 a:hover {
 	 color: #ecf0f9;
 }
+.movie-list-item {
+	 font-size: 15px;
+	 text-transform: uppercase;
+	 letter-spacing: 0.1ch;
+	 line-height: 1;
+	 padding-bottom: 0.5em;
+	 margin-bottom: 1rem;
+	 position: relative;
+	 color: #1a57e6;
+}
+.movie-list-item::before {
+	content: "\2022";
+    color: #e61a46;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+}
+.movie-list-item:hover {
+	 color: #e61a46;
+	 text-decoration: underline;
+}
 .large {
      font-size: 3rem;
 }

@@ -6,11 +6,11 @@
 <div class="container">
     <h1 class="heading">Select Movie</h1>
     {% if options %}
-        {% for movie in options %}
-              <p>
-                <a href="{{ url_for('find_movie', movie_id=movie.id) }}"> {{ movie.title }} - {{ movie.release_date }}</a>
-              </p>
-        {% endfor %}
+        <ul style="list-style-type: none; padding: 0">
+            {% for movie in options %}
+                <li><a class="movie-list-item" href="{{ url_for('find_movie', movie_id=movie.id) }}"> {{ movie.title }} - {{ movie.release_date }}</a></li>
+            {% endfor %}
+        </ul>
     {% else %}
         <p>No movie available with this name.</p>
     {% endif %}
